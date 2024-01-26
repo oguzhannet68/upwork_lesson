@@ -2,8 +2,13 @@ version: '3'
 
 services:
   upwork_test:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    restart: unless-stopped
+    build: .
     ports:
-      - "8080:80"
+      - "8099:80"
+    container_name: upwork
+    networks:
+      - ortak-network
+networks:
+  ortak-network:
+    external: true
