@@ -1,3 +1,4 @@
+
 <template>
   <section class="bg-gray-50 dark:bg-gray-900">
     <div
@@ -57,7 +58,10 @@
 </template>
 
 <script>
-import Servis from "../services/servis";
+/* eslint-disable */
+import { mapActions, mapGetters } from "vuex";
+import { toast } from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
 export default {
   name: "App",
   data() {
@@ -67,22 +71,31 @@ export default {
     };
   },
   methods: {
-    _login() {
-      Servis.postService("login", {
+    ...mapActions(["login", "logout"]),
+    async _login() {
+      await this.login({
         email: this.email,
         password: this.password,
-      })
-        .then((res) => {
-          if (res.data.status == "success") {
-            localStorage.setItem("token", res.data.token);
-            this.$router.push({ name: "Home" });
-          } else {
-            alert(res.data.message);
-          }
-        })
-        .catch((err) => {
-          console.log(err);
+      });
+      
+    },
+  },
+  computed: {
+    ...mapGetters(["getUser", "getError"]),
+  },
+  watch: {
+    getUser() {
+      if (this.getUser) {
+        this.$router.push("/about");
+      }
+    },
+    getError() {
+      if (this.getError) {
+        toast(this.getError, {
+          autoClose: 3000,
         });
+        this.logout();
+      }
     },
   },
 };

@@ -1,34 +1,51 @@
-export default {
+/* eslint-disable */
+
+import { createStore } from "vuex";
+import router from "../router";
+const store = createStore({
   state: {
     getUser: null,
+    getError: null,
   },
   getters: {
     getUser: (state) => state.getUser,
+    getError: (state) => state.getError,
   },
   mutations: {
     setUser(state, payload) {
       state.getUser = payload;
     },
     setError(state, error) {
-      // Hata durumunda varsayılan değeri ayarla
       state.getUser = null;
-      console.error(error);
+      state.getError = error;
     },
   },
   actions: {
-    async login({ commit, dispatch }, payload) {
+    async login({ commit }, payload) {
       try {
-        // Kullanıcı giriş işlemleri...
-        // Örneğin, bir servisi çağırarak kullanıcı bilgilerini alabilirsiniz.
-        // const user = await ServicesServis.getUser(payload);
-        if (someCondition) {
-          dispatch("login", payload); // Bu durumu kontrol edin ve gerekirse düzeltme yapın.
+        if (
+          payload.email === "admin@admin.com" &&
+          payload.password === "admin"
+        ) {
+          commit("setUser", payload);
+        } else {
+          commit("setError", "Username or password is incorrect");
         }
-        commit("setUser", payload);
       } catch (error) {
-        console.error("Login error:", error);
-        throw error; // Hata durumunu yönetebilirsiniz
+        commit("setError", error);
+      }
+    },
+    async logout({ commit }) {
+      try {
+        commit("setUser", null);
+        commit("setError", null);
+        router.push("/");
+      } catch (error) {
+        console.error("Logout error:", error);
+        throw error;
       }
     },
   },
-};
+});
+
+export default store;

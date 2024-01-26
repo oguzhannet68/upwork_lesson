@@ -3,5 +3,12 @@ import App from "./App.vue";
 import "tailwindcss/tailwind.css";
 import router from "./router";
 import store from "./store";
+import Vue3Toastify from "vue3-toastify";
 
-createApp(App).use(router, store).mount("#app");
+const app = createApp(App);
+app.use(router);
+app.use(store);
+app.use(Vue3Toastify, {
+  position: "top-right",
+});
+app.mount("#app");

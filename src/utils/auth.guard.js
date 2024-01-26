@@ -2,7 +2,6 @@ import store from "../store";
 export default (to, from, next) => {
   if (to.matched.some((record) => record.meta.loginRequired)) {
     const user = store.getters.getUser;
-    console.log(user);
     if (user) {
       const roleArrayHierarchic = to.matched
         .filter((x) => x.meta.roles)
